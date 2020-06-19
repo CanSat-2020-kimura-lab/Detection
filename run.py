@@ -4,10 +4,9 @@ sys.path.append()
 sys.path.append()
 sys.path.append()
 
-import GPS
-import moter
-import Wireless
+import gps_navigate
 
+import difflib
 import time 
 import datetime
 import pigpio
@@ -42,13 +41,19 @@ pi.set_mode(MODE,pigpio.OUTPUT)
 pi.set_mode(LARGE,pigpio.OUTPUT)
 pi.set_mode(STBY,pigpio.OUTPUT)
 
-pi.set_mode(RX,pigpio.OUTPUT)
+pi.set_mode(RX,pigpio.INPUT)
+
 '''
 pi.write(22,1)  #Wireless.SW:ON
 '''
 
 #-- GPS data --#
-
+def get_gpsdata():
+    # bb_serial_read_open(user_gpio, baud, bb_bits)
+    pi.bb_serial_read_open(RX, 9600, 8)
+    (count,data) = pi.bb_serial_read(RX) #説明書通りに書いたが意味不明
+    if count :
+        data = data.decode('utf-8', 'replace')
 
 #-- motor mode control definition --#
 def setup_mode(a,b,c):
@@ -108,13 +113,14 @@ class Run:
         setup_mode(1,0,1)
         setup_IN(1,1,1,1)
         setup_OUT(0,0,1,1)
-        time
 
 #-- obtain calculated data from GPS-Navigate.py --#
 def gps_data():
-    print('距離:{}'.s)
-    print('方位角(始点⇒終点):', degrees(α1) )
-    print('方位角(終点⇒始点):', degrees(α2) )
+    global result
+    result = gps_navigate.vincenty_inverse(120,120,120,120) #resultは辞書型のオブジェクト
+    print('距離：%s(m)' % round(result['distance'], 3))
+    print('方位角(始点→終点)：%s' % result['azimuth1']) # azimuth = 方位角
+    print('方位角(終点→始点)：%s' % result['azimuth2'])
 
 #-- note start time  --#
 start_time = datetime.datetime
@@ -128,16 +134,19 @@ def timer():
     time.sleep(5)
     cond = False
 
+gps_data()
+distance = result['distance']
+azimuth1 = result['azimuth1']
+
 #-- run by GPS guide if we aren't within 5m from the goal --#
-while s>5:
+while distance >5:
     #-- 進行方向がゴール方向になるまで回転制御 --#
-    if α1 != 0:
+    if azimuth1 != 0:
         while True:
-            gps_data()
             run = Run()
             run.turn_left()
 
-            if α1 == 0:
+            if azimuth1 == 0:
                 break   # escape from while loop
     
     #-- run phase --#
@@ -150,7 +159,7 @@ while s>5:
             run = Run()           
             run.stop()
             time.sleep(5)
-            thread = Thread(target=timer)
+            thread = Thread(target = timer)
             thread.start()
             #-- calibration --#
             while cond:
@@ -158,16 +167,16 @@ while s>5:
             
             time.sleep(3)
             #-- 進行方向がゴール方向になるまで回転制御 --#
-            if α1 != 0:
+            if azimuth1 != 0:
                 while True:
                     gps_data()
                     run = Run()
                     run.turn_left()
 
-                    if α1 == 0:
+                    if azimuth1 == 0:
                         break   # escape from while loop
     
-            #-- note time which last claibration was finished--#    
+            #-- キャリブレーションが終了した時刻を記録 --#    
             global time_log
             time_log = time.time
             print(time_log)
