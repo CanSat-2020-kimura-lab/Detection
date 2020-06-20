@@ -14,7 +14,6 @@ import GPS
 import IM920
 import TSL2561
 improt traceback
-#traceback:スタックトレース(エラー発生時に、直前に実行していた関数やメソッドなどの履歴を表示すること)の抽出
 
 luxdata = []
 bme280data = []
@@ -31,9 +30,9 @@ def luxdetect(anylux):
 	try:
 		luxdata = TSL2561.readLux()
 		
-		if luxdata[0]>anylux or luxdata[1]>anylux:
+		if luxdata[0] > anylux or luxdata[1] > anylux:
 			luxcount += 1
-				if luxcount>4:
+				if luxcount > 4:
 					luxreleasejudge = 1
 					print("luxreleasejudge")
 		else:
@@ -53,14 +52,14 @@ def pressdetect():
 	pressreleasejudge = 0
 	try:
 		pressdata = BME280.bme280_read()
-		latestpress = pressdata[1]
 		prevpress = pressdata[1]
-		deltA = latestpress - prevpress
+		latestpress = pressdata[1]
+		deltA1 = latestpress - prevpress
 		if 0.0 in bme280data:
 			print("BME280rror!")
 			pressreleasejudge = 2
 			altcount = 0
-		elif deltA<0:
+		elif deltA > 0:
 			altcount += 1
  			pressreleasejudge = 1
 			print("pressreleasejudge")
