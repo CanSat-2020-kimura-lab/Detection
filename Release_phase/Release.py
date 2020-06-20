@@ -18,7 +18,7 @@ improt traceback
 luxdata = []
 bme280data = []
 luxcount = 0
-altcount = 0
+presscount = 0
 
 luxreleasejudge = 0
 pressreleasejudge = 0
@@ -48,27 +48,27 @@ def luxdetect(anylux):
 
 def pressdetect():
 	global bme280data
-	global altcount
+	global presscount
 	pressreleasejudge = 0
 	try:
 		pressdata = BME280.bme280_read()
 		prevpress = pressdata[1]
 		latestpress = pressdata[1]
-		deltA1 = latestpress - prevpress
+		deltP = latestpress - prevpress
 		if 0.0 in bme280data:
 			print("BME280rror!")
 			pressreleasejudge = 2
-			altcount = 0
+			presscount = 0
 		elif deltA > 0:
-			altcount += 1
+			presscount += 1
  			pressreleasejudge = 1
 			print("pressreleasejudge")
 		else:
-			altcount = 0
+			Presscount = 0
 		print(str(latestpress) + "	:	" + str(pressdata[1]))
 	except:
 		print(tracebask.format_exc())
-		altcount = 0
+		presscount = 0
 		ltreleasejudge = 2
 	finally:
 		pressreleasejudge = 2
