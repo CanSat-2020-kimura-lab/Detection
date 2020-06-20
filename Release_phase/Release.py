@@ -47,7 +47,7 @@ def luxdetect(anylux):
 		luxreleasejudge = 2
 		return luxreleasejudge, luxcount
 
-def pressdetect()
+def pressdetect():
 	global bme280data
 	global altcount
 	pressreleasejudge = 0
