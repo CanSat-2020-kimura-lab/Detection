@@ -46,7 +46,7 @@ def luxdetect(anylux):
 		luxreleasejudge = 2
 		return luxreleasejudge, luxcount
 
-def pressdetect():
+def pressdetect(anypress):
 	global bme280data
 	global presscount
 	pressreleasejudge = 0
@@ -59,13 +59,14 @@ def pressdetect():
 			print("BME280rror!")
 			pressreleasejudge = 2
 			presscount = 0
-		elif deltA > 0:
+		elif deltP > anypress:
 			presscount += 1
- 			pressreleasejudge = 1
-			print("pressreleasejudge")
+			if presscount > 4:
+ 				pressreleasejudge = 1
+				print("pressreleasejudge")
 		else:
 			Presscount = 0
-		print(str(latestpress) + "	:	" + str(pressdata[1]))
+		print(str(latestpress) + "	:	" + str(prevpress))
 	except:
 		print(tracebask.format_exc())
 		presscount = 0
