@@ -72,4 +72,4 @@ def pressdetect():
 		ltreleasejudge = 2
 	finally:
 		pressreleasejudge = 2
-		return pressreleasejudge, altcount
+		return pressreleasejudge, presscount
