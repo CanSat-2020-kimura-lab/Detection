@@ -26,8 +26,6 @@ pi.set_mode(Pha2,pigpio.OUTPUT)
 pi.set_mode(MODE,pigpio.OUTPUT)
 pi.set_mode(LARGE,pigpio.OUTPUT)
 pi.set_mode(STBY,pigpio.OUTPUT)
-#--- GPS ---#
-pi.set_mode(RX,pigpio.INPUT)
 
 def setup_mode(a,b,c):
     pi.write(MODE,a)
