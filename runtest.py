@@ -79,11 +79,11 @@ class Run:
         setup_IN(1,1,1,1)
         #setup_OUT(0,0,1,1)
 
-start = time.time
+start = time.time()
  
 
 while True:
-    now = time.time
+    now = time.time()
     t = now - start
     if t < 5:
         run = Run()
