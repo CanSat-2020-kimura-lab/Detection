@@ -43,17 +43,14 @@ class Run:
     def straight(self):
         setup_mode(1,0,1)
         setup_IN(1,1,1,1)
-        #setup_OUT(1,0,1,0)
-    
+
     def back(self):
         setup_mode(1,0,1)
         setup_IN(1,0,1,0)
-        #setup_OUT(0,1,0,1)
-    
+
     def rotation(self):
         setup_mode(1,0,1)
         setup_IN(1,1,1,0)
-        #setup_OUT(1,0,0,1)
     
     def stop(self):
         setup_mode(1,0,1)
@@ -67,8 +64,7 @@ class Run:
         #-- rotate only right wheel --#
         setup_mode(1,0,1)
         setup_IN(1,1,1,1)
-        #setup_OUT(1,1,0,0)
-       
+      
     def turn_left(self):
         #-- stop --#
         setup_mode(1,0,1)
@@ -77,14 +73,39 @@ class Run:
         #-- rotate only left wheel --#
         setup_mode(1,0,1)
         setup_IN(1,1,1,1)
-        #setup_OUT(0,0,1,1)
 
 start = time.time()
- 
 
+#-- Timer --#
+cond = True
+
+def timer():
+    global cond
+    time.sleep(3)
+    cond = False
+'''
 while True:
-    now = time.time()
-    t = now - start
-    if t < 5:
+    try :
+        now = time.time()
+        t = now - start
         run = Run()
         run.straight()
+        if t > 3:
+            run = Run()
+            run.stop()
+    except KeyboardInterrupt:
+        run = Run()
+        run.stop()
+'''
+try:
+    while cond:
+        run = Run()
+        run.straight()
+
+except KeyboardInterrupt:
+        run = Run()
+        run.stop()
+        
+finally:
+    run = Run()
+    run.stop()
