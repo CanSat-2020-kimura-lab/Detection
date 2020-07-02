@@ -97,6 +97,8 @@ while True:
         run.stop()
 '''
 try:
+    thread = Thread(target = timer)
+    thread.start()
     while cond:
         run = Run()
         run.straight()
