@@ -4,16 +4,14 @@ import pigpio
 from threading import Thread
 
 #-- GPIO connection --#
-Ena1 = 12
-Pha1 = 21
-Ena2 = 1
-Pha2 = 1
+Ena1 = 13
+Pha1 = 19
+Ena2 = 12
+Pha2 = 25
 
-LARGE = 8
-MODE = 7
-STBY = 18
-
-#-- モーターはOUT1とOUT2、OUT3とOUT4で一つずつ接続されている --#
+LARGE = 10
+MODE = 9
+STBY = 11
 
 pi = pigpio.pi()
 
@@ -32,47 +30,47 @@ def setup_mode(a,b,c):
     pi.write(LARGE,b)
     pi.write(STBY,c)
 
-def setup_IN(d,e,f,g):
+def setup_IN(d,e,f,g,t):
     pi.write(Ena1,d)
     pi.write(Pha1,e)
     pi.write(Ena2,f)
     pi.write(Pha2,g)
+    time.sleep(t)
 
 #-- run phase definition --#
 class Run:
     def straight(self):
         setup_mode(1,0,1)
-        setup_IN(1,1,1,1)
+        setup_IN(1,1,1,1,2.0)
 
     def back(self):
         setup_mode(1,0,1)
-        setup_IN(1,0,1,0)
+        setup_IN(1,0,1,0,2.0)
 
     def rotation(self):
         setup_mode(1,0,1)
-        setup_IN(1,1,1,0)
+        setup_IN(1,1,1,0,2.0)
     
     def stop(self):
         setup_mode(1,0,1)
-        setup_IN(0,0,0,0)
+        setup_IN(0,0,0,0,2.0)
 
     def turn_right(self):
         #-- stop --#
         setup_mode(1,0,1)
-        setup_IN(0,0,0,0)
-        time.sleep(1)
+        setup_IN(0,0,0,0,1.0)
         #-- rotate only right wheel --#
         setup_mode(1,0,1)
-        setup_IN(1,1,1,1)
+        setup_IN(1,1,1,1,2.0)
       
     def turn_left(self):
         #-- stop --#
         setup_mode(1,0,1)
-        setup_IN(0,0,0,0)
+        setup_IN(0,0,0,0,2.0)
         time.sleep(1)
         #-- rotate only left wheel --#
         setup_mode(1,0,1)
-        setup_IN(1,1,1,1)
+        setup_IN(1,1,1,1,2.0)
 
 start = time.time()
 
@@ -93,6 +91,7 @@ while True:
         if t > 3:
             run = Run()
             run.stop()
+            break
     except KeyboardInterrupt:
         run = Run()
         run.stop()
