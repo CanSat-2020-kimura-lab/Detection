@@ -12,18 +12,18 @@ def ParaJudge(LuxThd):
 	lux=TSL2561.readLux()
 	#print("lux1: "+str(lux[0]))
 
-	if lux[0] < LuxThd:
+	if lux[0] < LuxThd:  #LuxThd: 照度センサの閾値
 		time.sleep(1)
 		return [0, lux[0]]
 
 	else:
-		return [1, lux[0]]
+		return [1, lux[0]] 
 
 
 def ParaDetection(imgpath, H_min, H_max, S_thd):
 	try:
 		imgname = Capture.Capture(imgpath)
-		img = cv2.imread(imgname)
+		img = cv2.imread(imgname) #画像ファイルから読み込み
 		#make mask
 		img_HSV = cv2.cvtColor(cv2.GaussianBlur(img,(15,15),0),cv2.COLOR_BGR2HSV_FULL)
 		h = img_HSV[:, :, 0]
