@@ -12,12 +12,12 @@ def ParaJudge(LuxThd):
 	lux=TSL2561.readLux()
 	#print("lux1: "+str(lux[0]))
 
-	if lux[0] < LuxThd:
+	if lux[0] < LuxThd:  #LuxThd: 照度センサの閾値
 		time.sleep(1)
 		return [0, lux[0]]
 
 	else:
-		return [1, lux[0]]
+		return [1, lux[0]] 
 
 
 def ParaDetection(imgpath, H_min, H_max, S_thd):
