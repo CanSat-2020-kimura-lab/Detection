@@ -7,7 +7,7 @@ sys.psth.append('/home/pi/git/kimuralab/SenseorModuleTest/TSL2561')
 
 import time
 import serial
-import pigpio
+import pigpio 
 import BME280
 import BMX055
 import GPS
