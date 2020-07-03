@@ -23,7 +23,7 @@ def ParaJudge(LuxThd):
 def ParaDetection(imgpath, H_min, H_max, S_thd):
 	try:
 		imgname = Capture.Capture(imgpath)
-		img = cv2.imread(imgname)
+		img = cv2.imread(imgname) #画像ファイルから読み込み
 		#make mask
 		img_HSV = cv2.cvtColor(cv2.GaussianBlur(img,(15,15),0),cv2.COLOR_BGR2HSV_FULL)
 		h = img_HSV[:, :, 0]
