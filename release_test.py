@@ -49,6 +49,8 @@ def pressdetect(anypress):
 	try:
 		pressdata = BME280.bme280_read()
 		prevpress = pressdata[1]
+		time.sleep(1)
+		pressdata = BME280.bme280_read()
 		latestpress = pressdata[1]
 		print(presscount)
 		deltP = latestpress - prevpress
