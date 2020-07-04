@@ -26,7 +26,7 @@ def Pressdetect(anypress):
 		pressdata = BME280.bme280_read()
 		Prevpress = pressdata[1]
 		Latestpress = pressdata[1]
-		deltP = Latestpress - Prevpress
+		deltP = abs(Latestpress - Prevpress)
 		print(str(Latestpress)+"    :    "+str(Prevpress))
 		if 0.0 in bme280data:
 			print("BME280error!")
@@ -55,12 +55,31 @@ def gpsdetect(anyalt):
 	gpslandjudge = 0
 	try:
 		gpsalt = 0
-		
+		gpsdata = GPS.readGPS()
+		Latestgpsalt = gpsdata[3]
+		Prvevgpalt = gpsdata[3]
+		daltGA = abs(latestgpsalt - prevgpsalt)
+		print(str(Latestgpsslt)+"	:	"+str(prevgpsalt))
+		if daltGA < anyalt
+			GAcount += 1
+			if GAcount > 4:
+				gpslandjuge = 1
+				print("gpslandjudge")
+			else:
+				gpslandjudge = 0
+	except:
+		print(traceback.format_exc())
+		GAcount = 0
+		gpslandjudge = 2
+	return GAcount, gpslandjudge
 
-if __name__=="__main__":
+if __name__=="_main__":
 	BME280.bme280_setup()
 	BME280.bme280_calib_param()
 	while 1:
-		pressdetect(0.1)
+		presslandjudge(0.1)
 		time.sleep(1)
-		
+	'''
+	GPS.openGPS()
+	while 1:
+		gsplandjudge()
