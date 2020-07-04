@@ -72,41 +72,45 @@ class Run:
         setup_mode(1,0,1)
         setup_IN(1,1,1,1,2.0)
 
-start = time.time()
-
 #-- Timer --#
-cond = True
-
 def timer():
     global cond
     time.sleep(3)
     cond = False
+
+if __name__ == "__main__":
+    #--- 方法1 ---#
 '''
-while True:
-    try :
-        now = time.time()
-        t = now - start
-        run = Run()
-        run.straight()
-        if t > 3:
+    start = time.time()
+    while True:
+        try :
+            now = time.time()
+            t = now - start
+            run = Run()
+            run.straight()
+            if t > 3:
+                run = Run()
+                run.stop()
+                break
+        except KeyboardInterrupt:
             run = Run()
             run.stop()
-            break
+'''
+    #--- 方法2 ---#
+    try:
+        cond = True   #use Timer
+        thread = Thread(target = timer)
+        thread.start()
+        while cond:
+            run = Run()
+            run.straight()
+
     except KeyboardInterrupt:
         run = Run()
         run.stop()
-'''
-try:
-    thread = Thread(target = timer)
-    thread.start()
-    while cond:
-        run = Run()
-        run.straight()
-
-except KeyboardInterrupt:
+        
+    finally:
         run = Run()
         run.stop()
-        
-finally:
-    run = Run()
-    run.stop()
+
+#どっちもうまくいった(2020/07/02)
