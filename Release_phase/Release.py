@@ -1,20 +1,18 @@
 import sys  
-sys.path.append('/home//pi/git/kimuralab/SensorModuleTest/BME280')
-sys.path.append('/home//pi/git/kimuralab/SensorModuleTest/BMX055')
-sys.path.append('/home//pi/git/kimuralab/SensorModuleTest/GPS')
-sys.path.append('/home//pi/git/kimuralab/SensorModuleTest/IM920')
-sys.path.append('/home//pi/git/kimuralab/SensorModuleTest/TSL2561')
+sys.path.append('/home/pi/SensorModuleTest/BME280')
+sys.path.append('/home/pi/2019/SensorModuleTest/GPS')
+sys.path.append('/home/pi/SensorModuleTest/TSL2561')
 
 import time
 import serial
 import pigpio
 import BME280
-import BMX055
 import GPS
-import IM920
 import TSL2561
-improt traceback
+import traceback
 
+anylux = 0
+anypress = 0.3
 luxdata = []
 bme280data = []
 luxcount = 0
@@ -29,22 +27,20 @@ def luxdetect(anylux):
 	luxreleasejudge = 0
 	try:
 		luxdata = TSL2561.readLux()
-		
+		print(luxdata)
+		print(luxcount)
 		if luxdata[0] > anylux or luxdata[1] > anylux:
 			luxcount += 1
-				if luxcount > 4:
-					luxreleasejudge = 1
-					print("luxreleasejudge")
-		else:
-			luxreleasejudge = 0
-			luxcount = 0
+			if luxcount > 4:
+				luxreleasejudge = 1
+				print("luxreleasejudge")
+			else:
+				luxreleasejudge = 0
 	except:
 		print(traceback.format_exc())
 		luxcount = 0
 		luxreleasejudge = 2
-	finally:
-		luxreleasejudge = 2
-		return luxreleasejudge, luxcount
+	return luxreleasejudge, luxcount
 
 def pressdetect(anypress):
 	global bme280data
@@ -53,7 +49,10 @@ def pressdetect(anypress):
 	try:
 		pressdata = BME280.bme280_read()
 		prevpress = pressdata[1]
+		time.sleep(1)
+		pressdata = BME280.bme280_read()
 		latestpress = pressdata[1]
+		print(presscount)
 		deltP = latestpress - prevpress
 		if 0.0 in bme280data:
 			print("BME280rror!")
@@ -62,15 +61,26 @@ def pressdetect(anypress):
 		elif deltP > anypress:
 			presscount += 1
 			if presscount > 4:
- 				pressreleasejudge = 1
+				pressreleasejudge = 1
 				print("pressreleasejudge")
 		else:
 			Presscount = 0
 		print(str(latestpress) + "	:	" + str(prevpress))
 	except:
-		print(tracebask.format_exc())
+		print(traceback.format_exc())
 		presscount = 0
 		ltreleasejudge = 2
-	finally:
-		pressreleasejudge = 2
-		return pressreleasejudge, presscount
+	return pressreleasejudge, presscount
+
+if __name__=="__main__":
+	'''
+	TSL2561.tsl2561_setup()
+	while 1:
+		luxdetect(200)
+		time.sleep(1)
+	'''
+	BME280.bme280_setup()
+	BME280.bme280_calib_param()
+	while 1:
+		pressdetect(0.3)
+		time.sleep(1)
