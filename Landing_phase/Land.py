@@ -1,7 +1,7 @@
 import sys
-sys.path.append('/home/pi/SensorModuleTest/BME280')
-sys.path.append('/home/pi/2019/SensorModuleTest/GPS')
-sys.path.append('/home/pi/2019/SensorModuleTest/TSL2561')
+sys.path.append('/home/pi/git/kimuralab/SensorModuleTest/BME280')
+sys.path.append('/home/pi/git/kimuralab/SensorModuleTest/GPS')
+sys.path.append('/home/pi/git/kimuralab/SensorModuleTest/TSL2561')
 
 import time
 import serial
