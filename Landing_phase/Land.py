@@ -1,14 +1,11 @@
 import sys
 sys.path.append('/home/pi/git/kimuralab/SensorModuleTest/BME280')
-#sys.path.append('/home/pi/git/kimuralab/SensorModuleTest/GPS')
 sys.path.append('/home/pi/git/kimuralab/SensorModuleTest/TSL2561')
 
 import time
 import serial
 import pigpio
 import BME280
-#import GPS
-#import TSL2561
 import traceback
 import math
 
