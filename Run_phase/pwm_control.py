@@ -225,7 +225,16 @@ if __name__ == "__main__":
                         run. straight_h()
                 time.sleep(1)
 
-                #-- run straight at normal speed  for 1 seconds --#
+        except KeyboardInterrupt:
+                run = Run()
+                run.stop()
+                
+        finally:
+                run = Run()
+                run.stop()
+
+        #-- run straight at normal speed  for 1 seconds --#
+        try:
                 cond = True
                 thread = Thread(target = timer)
                 thread.start()
@@ -234,7 +243,16 @@ if __name__ == "__main__":
                         run. straight_n()
                 time.sleep(1)
 
-                #-- run straight at low speed  for 1 seconds --#
+        except KeyboardInterrupt:
+                run = Run()
+                run.stop()
+                
+        finally:
+                run = Run()
+                run.stop()
+
+        #-- run straight at low speed  for 1 seconds --#
+        try:
                 cond = True
                 thread = Thread(target = timer)
                 thread.start()
@@ -242,6 +260,14 @@ if __name__ == "__main__":
                 while cond:
                         run. straight_l()
                 time.sleep(1)
+
+        except KeyboardInterrupt:
+                run = Run()
+                run.stop()
+                
+        finally:
+                run = Run()
+                run.stop()
                 '''
                 #-- run back for 1 seconds --#
                 cond = True
@@ -279,10 +305,3 @@ if __name__ == "__main__":
                 run. turn_left()
                 time.sleep(1)
                 '''
-        except KeyboardInterrupt:
-                run = Run()
-                run.stop()
-                
-        finally:
-                run = Run()
-                run.stop()
