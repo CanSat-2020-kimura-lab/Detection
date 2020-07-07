@@ -1,6 +1,7 @@
 import sys
-sys.path.append('home/pi/SensorModuleTest/BME280')
-sys.path.append('home/pi/2019/SensorModuleTest/GPS')
+sys.path.append('/home/pi/git/kimuralab/SensorModuleTest/BME280')
+sys.path.append('/home/pi/git/kimuralab/SensorModuleTest/GPS')
+sys.path.append('/home/pi/git/kimuralab/Other')
 
 import time
 import serial
@@ -17,6 +18,10 @@ GAcount = 0
 Mcount = 0
 bme280data = []
 gpsdata = []
+
+landingLog = '/home/pi/log/landingLog.txt'
+
+t_start = time.time()
 
 def Pressdetect(anypress):
 	global bme280data
@@ -74,11 +79,20 @@ def gpsdetect(anyalt):
 	return GAcount, gpslandjudge
 
 if __name__=="_main__":
+	print("Landing Phase Started")
+	y = 60
+	t1 = time.time()
+	t2 = t1
 	BME280.bme280_setup()
 	BME280.bme280_calib_param()
-	while 1:
-		presslandjudge(0.1)
+	while (t1 t1-t2<y):
+		pressjudge = presslandjudge(0.1)
 		time.sleep(1)
+		if pressjudge == 1:
+			break
+		bme280data = BME280.bme280_read()
+		Other.saveLog(landLog, time.time() - t_start, Bme.bme280_read())
+	print("Land Timeout")
 	'''
 	GPS.openGPS()
 	while 1:
