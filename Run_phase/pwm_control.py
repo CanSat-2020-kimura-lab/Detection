@@ -3,17 +3,13 @@ import pigpio
 from threading import Thread
 
 #-- GPIO connection --#
-Ena1 = 12
-Pha1 = 21
-Ena2 = 1
-Pha2 = 1
-OUT1 = 1
-OUT2 = 1
-OUT3 = 1
-OUT4 = 1
-LARGE = 8
-MODE = 7
-STBY = 18
+Ena1 = 13
+Pha1 = 19
+Ena2 = 12
+Pha2 = 25
+LARGE = 10
+MODE = 9
+STBY = 11
 
 pi = pigpio.pi()
 
@@ -43,246 +39,250 @@ pi.set_PWM_range(Pha2,range)
 
 #-- PWM control --#
 #-- duty ratio --#
-# duty比の最大は range の最大から考える
+# duty ration = d/range
 d = 0
 def high_speed():
-    global d
-    d = 192  # duty ratio = 3/4
-    '''
-    pi.set_PWM_dutycycle(Ena1, d)
-    pi.set_PWM_dutycycle(Pha1, d)
-    pi.set_PWM_dutycycle(Ena2, d)
-    pi.set_PWM_dutycycle(Pha2, d)
-    '''
+        global d
+        d = 192  # duty ratio = 3/4
+        '''
+        pi.set_PWM_dutycycle(Ena1, d)
+        pi.set_PWM_dutycycle(Pha1, d)
+        pi.set_PWM_dutycycle(Ena2, d)
+        pi.set_PWM_dutycycle(Pha2, d)
+        '''
 
 def normal_speed():
-    global d
-    d = 128  # duty ratio = 1/2
-    '''
-    pi.set_PWM_dutycycle(Ena1, d)
-    pi.set_PWM_dutycycle(Pha1, d)
-    pi.set_PWM_dutycycle(Ena2, d)
-    pi.set_PWM_dutycycle(Pha2, d)
-    '''
+        global d
+        d = 128  # duty ratio = 1/2
+        '''
+        pi.set_PWM_dutycycle(Ena1, d)
+        pi.set_PWM_dutycycle(Pha1, d)
+        pi.set_PWM_dutycycle(Ena2, d)
+        pi.set_PWM_dutycycle(Pha2, d)
+        '''
 
 def low_speed():
-    global d
-    d = 64  # duty ratio = 1/4
-    '''
-    pi.set_PWM_dutycycle(Ena1, d)
-    pi.set_PWM_dutycycle(Pha1, d)
-    pi.set_PWM_dutycycle(Ena2, d)
-    pi.set_PWM_dutycycle(Pha2, d)
-    '''
+        global d
+        d = 64  # duty ratio = 1/4
+        '''
+        pi.set_PWM_dutycycle(Ena1, d)
+        pi.set_PWM_dutycycle(Pha1, d)
+        pi.set_PWM_dutycycle(Ena2, d)
+        pi.set_PWM_dutycycle(Pha2, d)
+        '''
 
 #-- motor mode control definition --#
 def setup_mode(a,b,c):
-    pi.write(MODE,a)
-    pi.write(LARGE,b)
-    pi.write(STBY,c)
+        pi.write(MODE,a)
+        pi.write(LARGE,b)
+        pi.write(STBY,c)
 
-def setup_IN(d,e,f,g):
-    pi.write(Ena1,d)
-    pi.write(Pha1,e)
-    pi.write(Ena2,f)
-    pi.write(Pha2,g)
-'''
-def setup_OUT(h,i,j,k):
-    pi.write(OUT1,h)
-    pi.write(OUT2,i)
-    pi.write(OUT3,j)
-    pi.write(OUT4,k)
-'''
+def setup_IN(d,e,f,g,t):
+        pi.write(Ena1,d)
+        pi.write(Pha1,e)
+        pi.write(Ena2,f)
+        pi.write(Pha2,g)
+        time.sleep(t)
+
 #-- run phase definition --#
 class Run:
-    def straight_h(self):
-        high_speed()
-        setup_mode(1,0,1)
+        def straight_h(self):
+                high_speed()
+                setup_mode(1,0,1)
 
-        pi.set_PWM_dutycycle(Ena1, d)
-        pi.set_PWM_dutycycle(Pha1, d)
-        pi.set_PWM_dutycycle(Ena2, d)
-        pi.set_PWM_dutycycle(Pha2, d)
-        '''
-        pi.set_PWM_dutycycle(OUT1, d)
-        pi.set_PWM_dutycycle(OUT2, d)
-        pi.set_PWM_dutycycle(OUT3, d)
-        pi.set_PWM_dutycycle(OUT4, d)
-        '''
+                pi.set_PWM_dutycycle(Ena1, d)
+                pi.set_PWM_dutycycle(Pha1, d)
+                pi.set_PWM_dutycycle(Ena2, d)
+                pi.set_PWM_dutycycle(Pha2, d)
 
-        setup_IN(d,d,d,d)
-        #setup_OUT(d,0,d,0)
-        #setup_IN(1,1,1,1)
-        #setup_OUT(1,0,1,0)
+                #setup_IN(d,d,d,d)
+                #setup_OUT(d,0,d,0)
+                #setup_IN(1,1,1,1)
+                #setup_OUT(1,0,1,0)
 
-    def straight_l(self):
-        low_speed()
-        setup_mode(1,0,1)
+        def straight_n(self):
+                normal_speed()
+                setup_mode(1,0,1)
 
-        pi.set_PWM_dutycycle(Ena1, d)
-        pi.set_PWM_dutycycle(Pha1, d)
-        pi.set_PWM_dutycycle(Ena2, d)
-        pi.set_PWM_dutycycle(Pha2, d)
-        '''
-        pi.set_PWM_dutycycle(OUT1, d)
-        pi.set_PWM_dutycycle(OUT2, d)
-        pi.set_PWM_dutycycle(OUT3, d)
-        pi.set_PWM_dutycycle(OUT4, d)
-        '''
+                pi.set_PWM_dutycycle(Ena1, d)
+                pi.set_PWM_dutycycle(Pha1, d)
+                pi.set_PWM_dutycycle(Ena2, d)
+                pi.set_PWM_dutycycle(Pha2, d)
 
-        setup_IN(d,d,d,d)
-        #setup_OUT(d,0,d,0)
-        #setup_IN(1,1,1,1)
-        #setup_OUT(1,0,1,0)
+                #setup_IN(d,d,d,d)
+                #setup_OUT(d,0,d,0)
+                #setup_IN(1,1,1,1)
+                #setup_OUT(1,0,1,0)
 
-    
-    def back(self):
-        high_speed()
-        setup_mode(1,0,1)
+        def straight_l(self):
+                low_speed()
+                setup_mode(1,0,1)
 
-        pi.set_PWM_dutycycle(Ena1, d)
-        pi.set_PWM_dutycycle(Pha1, d)
-        pi.set_PWM_dutycycle(Ena2, d)
-        pi.set_PWM_dutycycle(Pha2, d)
-        '''
-        pi.set_PWM_dutycycle(OUT1, d)
-        pi.set_PWM_dutycycle(OUT2, d)
-        pi.set_PWM_dutycycle(OUT3, d)
-        pi.set_PWM_dutycycle(OUT4, d)
-        '''
+                pi.set_PWM_dutycycle(Ena1, d)
+                pi.set_PWM_dutycycle(Pha1, d)
+                pi.set_PWM_dutycycle(Ena2, d)
+                pi.set_PWM_dutycycle(Pha2, d)
 
-        setup_IN(d,0,d,0)
-        #setup_OUT(0,d,0,d)
-        #setup_IN(1,0,1,0)
-        #setup_OUT(0,1,0,1)
-    
-    def rotation(self):
-        high_speed()
-        setup_mode(1,0,1)
+                #setup_IN(d,d,d,d)
+                #setup_OUT(d,0,d,0)
+                #setup_IN(1,1,1,1)
+                #setup_OUT(1,0,1,0)
+        
+        def back(self):
+                high_speed()
+                setup_mode(1,0,1)
 
-        pi.set_PWM_dutycycle(Ena1, d)
-        pi.set_PWM_dutycycle(Pha1, d)
-        pi.set_PWM_dutycycle(Ena2, d)
-        pi.set_PWM_dutycycle(Pha2, d)
-        '''
-        pi.set_PWM_dutycycle(OUT1, d)
-        pi.set_PWM_dutycycle(OUT2, d)
-        pi.set_PWM_dutycycle(OUT3, d)
-        pi.set_PWM_dutycycle(OUT4, d)
-        '''
+                pi.set_PWM_dutycycle(Ena1, d)
+                #pi.set_PWM_dutycycle(Pha1, d)
+                pi.set_PWM_dutycycle(Ena2, d)
+                #pi.set_PWM_dutycycle(Pha2, d)
 
-        setup_IN(d,d,d,0)
-        #setup_OUT(d,0,0,d)
-        #setup_IN(1,1,1,0)
-        #setup_OUT(1,0,0,1)
-    
-    def stop(self):
-        setup_mode(1,0,1)
-        setup_IN(0,0,0,0)
+                #setup_IN(d,0,d,0)
+                #setup_OUT(0,d,0,d)
+                #setup_IN(1,0,1,0)
+                #setup_OUT(0,1,0,1)
+        
+        def rotation(self):
+                high_speed()
+                setup_mode(1,0,1)
 
-    def turn_right(self):
-        #-- stop --#
-        setup_mode(1,0,1)
-        setup_IN(0,0,0,0)
+                pi.set_PWM_dutycycle(Ena1, d)
+                pi.set_PWM_dutycycle(Pha1, d)
+                pi.set_PWM_dutycycle(Ena2, d)
+                #pi.set_PWM_dutycycle(Pha2, d)
+
+                #setup_IN(d,d,d,0)
+                #setup_OUT(d,0,0,d)
+                #setup_IN(1,1,1,0)
+                #setup_OUT(1,0,0,1)
+        
+        def stop(self):
+                setup_mode(1,0,1)
+                setup_IN(0,0,0,0,1.0)
+
+        def turn_right(self):
+                #-- stop --#
+                setup_mode(1,0,1)
+                setup_IN(0,0,0,0,1.0)
+                time.sleep(1)
+                #-- right wheel is high speed left wheel is low speed --#
+                high_speed()
+                d1 = d
+                low_speed()
+                d2 = d
+                setup_mode(1,0,1)
+                pi.set_PWM_dutycycle(Ena1, d1)
+                pi.set_PWM_dutycycle(Pha1, d1)
+                pi.set_PWM_dutycycle(Ena2, d2)
+                pi.set_PWM_dutycycle(Pha2, d2)
+
+                #setup_IN(d1,d1,d2,d2)
+                #setup_OUT(d,0,d,0)
+
+                #-- rotate only right wheel --#
+                #setup_IN(1,1,1,1)
+                #setup_OUT(1,1,0,0)
+        
+        def turn_left(self):
+                #-- stop --#
+                setup_mode(1,0,1)
+                setup_IN(0,0,0,0,1.0)
+                time.sleep(1)
+                #-- right wheel is high speed left wheel is low speed --#
+                low_speed()
+                d1 = d
+                high_speed()
+                d2 = d
+                setup_mode(1,0,1)
+                pi.set_PWM_dutycycle(Ena1, d1)
+                pi.set_PWM_dutycycle(Pha1, d1)
+                pi.set_PWM_dutycycle(Ena2, d2)
+                pi.set_PWM_dutycycle(Pha2, d2)
+
+                #setup_IN(d,d,d,d)
+                #setup_OUT(0,0,d,d)
+                #setup_IN(1,1,1,1)
+                #setup_OUT(0,0,1,1)
+
+#-- Timer --#
+def timer(t):
+        global cond
         time.sleep(1)
-        #-- right wheel is high speed left wheel is low speed --#
-        high_speed()
-        d1 = d
-        low_speed()
-        d2 = d
-        setup_mode(1,0,1)
-        pi.set_PWM_dutycycle(Ena1, d1)
-        pi.set_PWM_dutycycle(Pha1, d1)
-        pi.set_PWM_dutycycle(Ena2, d2)
-        pi.set_PWM_dutycycle(Pha2, d2)
-        '''
-        pi.set_PWM_dutycycle(OUT1, d)
-        pi.set_PWM_dutycycle(OUT2, d)
-        pi.set_PWM_dutycycle(OUT3, d)
-        pi.set_PWM_dutycycle(OUT4, d)
-        '''
-        setup_IN(d1,d1,d2,d2)
-        #setup_OUT(d,0,d,0)
-
-        #-- rotate only right wheel --#
-        #setup_IN(1,1,1,1)
-        #setup_OUT(1,1,0,0)
-       
-    def turn_left(self):
-        #-- stop --#
-        setup_mode(1,0,1)
-        setup_IN(0,0,0,0)
-        time.sleep(1)
-        #-- right wheel is high speed left wheel is low speed --#
-        low_speed()
-        d1 = d
-        high_speed()
-        d2 = d
-        setup_mode(1,0,1)
-        pi.set_PWM_dutycycle(Ena1, d1)
-        pi.set_PWM_dutycycle(Pha1, d1)
-        pi.set_PWM_dutycycle(Ena2, d2)
-        pi.set_PWM_dutycycle(Pha2, d2)
-        '''
-        pi.set_PWM_dutycycle(OUT1, d)
-        pi.set_PWM_dutycycle(OUT2, d)
-        pi.set_PWM_dutycycle(OUT3, d)
-        pi.set_PWM_dutycycle(OUT4, d)
-        '''
-        setup_IN(d,d,d,d)
-        #setup_OUT(0,0,d,d)
-        #setup_IN(1,1,1,1)
-        #setup_OUT(0,0,1,1)
-
-time_log = time.time
-print(time_log)
-
-def timer():
-    global cond
-    time.sleep(5)
-    cond = False
-
-run = Run()
+        cond = False
 
 #-- Run test --#
-thread = Thread(target = timer)
-thread.start()
-#-- run straight at high speed for 5 seconds --#
-while cond:
-    run. straight_h()
-time.sleep(5)
+if __name__ == "__main__":
+        try:
+                cond = True  #use Timer
+                run = Run()
+                
+                #-- run straight at high speed for 1 seconds --#
+                thread = Thread(target = timer)
+                thread.start()
 
-thread = Thread(target = timer)
-thread.start()
-#-- run straight at low speed  for 5 seconds --#
-while cond:
-    run. straight_l()
-time.sleep(5)
+                while cond:
+                        run = Run()
+                        run. straight_h()
+                time.sleep(1)
 
-thread = Thread(target = timer)
-thread.start()
-#-- run back for 5 seconds --#
-while cond:
-    run.back()
-time.sleep(5)
+                #-- run straight at normal speed  for 1 seconds --#
+                cond = True
+                thread = Thread(target = timer)
+                thread.start()
 
-thread = Thread(target = timer)
-thread.start()
-#-- rotation for 5 seconds --#
-while cond:
-    run.rotation()
-time.sleep(5)
+                while cond:
+                        run. straight_n()
+                time.sleep(1)
 
-thread = Thread(target = timer)
-thread.start()
-#-- turn right for 5 seconds --#
-while cond:
-    run. turn_right()
-time.sleep(5)
+                #-- run straight at low speed  for 1 seconds --#
+                cond = True
+                thread = Thread(target = timer)
+                thread.start()
 
-thread = Thread(target = timer)
-thread.start()
-#-- turn left for 5 seconds --#
-while cond:
-    run. turn_left()
-time.sleep(5)
+                while cond:
+                        run. straight_l()
+                time.sleep(1)
+                '''
+                #-- run back for 1 seconds --#
+                cond = True
+                thread = Thread(target = timer)
+                thread.start()
+
+                while cond:
+                run.back()
+                time.sleep(1)
+
+                #-- rotation for 1 seconds --#
+                cond = True
+                thread = Thread(target = timer)
+                thread.start()
+
+                while cond:
+                run.rotation()
+                time.sleep(1)
+
+                #-- turn right for 1 seconds --#
+                cond = True
+                thread = Thread(target = timer)
+                thread.start()
+
+                while cond:
+                run. turn_right()
+                time.sleep(1)
+
+                #-- turn left for 1 seconds --#
+                cond = True
+                thread = Thread(target = timer)
+                thread.start()
+
+                while cond:
+                run. turn_left()
+                time.sleep(1)
+                '''
+        except KeyboardInterrupt:
+                run = Run()
+                run.stop()
+                
+        finally:
+                run = Run()
+                run.stop()
