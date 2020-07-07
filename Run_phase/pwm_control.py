@@ -212,14 +212,12 @@ def timer(t):
 
 #-- Run test --#
 if __name__ == "__main__":
+        #-- run straight at high speed for 1 seconds --#
         try:
-                cond = True  #use Timer
-                run = Run()
-                
-                #-- run straight at high speed for 1 seconds --#
+                cond = True  #use Timer                
                 thread = Thread(target = timer)
                 thread.start()
-
+                
                 while cond:
                         run = Run()
                         run. straight_h()
@@ -240,6 +238,7 @@ if __name__ == "__main__":
                 thread.start()
 
                 while cond:
+                        run.Run()
                         run. straight_n()
                 time.sleep(1)
 
@@ -258,6 +257,7 @@ if __name__ == "__main__":
                 thread.start()
 
                 while cond:
+                        run.Run()
                         run. straight_l()
                 time.sleep(1)
 
