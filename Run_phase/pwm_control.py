@@ -238,7 +238,7 @@ if __name__ == "__main__":
                 thread.start()
 
                 while cond:
-                        run.Run()
+                        run = Run()
                         run. straight_n()
                 time.sleep(1)
 
@@ -257,7 +257,7 @@ if __name__ == "__main__":
                 thread.start()
 
                 while cond:
-                        run.Run()
+                        run = Run()
                         run. straight_l()
                 time.sleep(1)
 
