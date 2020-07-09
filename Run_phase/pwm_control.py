@@ -205,7 +205,7 @@ class Run:
                 #setup_OUT(0,0,1,1)
 
 #-- Timer --#
-def timer(t):
+def timer():
         global cond
         time.sleep(1)
         cond = False
