@@ -193,6 +193,7 @@ def timer():
 
 #--- Run test ---#
 if __name__ == "__main__":
+        '''
         #--- run straight at high speed for 1 seconds ---#
         try:
                 #--- use Timer ---#
@@ -258,7 +259,8 @@ if __name__ == "__main__":
                 thread.start()
 
                 while cond:
-                run.back()
+                        run = Run()
+                        run.back()
                 time.sleep(1)
 
         except KeyboardInterrupt:
@@ -270,12 +272,14 @@ if __name__ == "__main__":
                 run.stop()
 
         #-- rotation for 1 seconds --#
+        try:
                 cond = True
                 thread = Thread(target = timer)
                 thread.start()
 
                 while cond:
-                run.rotation()
+                        run = Run()
+                        run.rotation()
                 time.sleep(1)
 
         except KeyboardInterrupt:
@@ -287,12 +291,14 @@ if __name__ == "__main__":
                 run.stop()
         
         #-- turn right for 1 seconds --#
-        try:        cond = True
+        try:
+                cond = True
                 thread = Thread(target = timer)
                 thread.start()
 
                 while cond:
-                run. turn_right()
+                        run = Run()
+                        run. turn_right()
                 time.sleep(1)
 
         except KeyboardInterrupt:
@@ -310,7 +316,8 @@ if __name__ == "__main__":
                 thread.start()
 
                 while cond:
-                run. turn_left()
+                        run = Run()
+                        run. turn_left()
                 time.sleep(1)
 
         except KeyboardInterrupt:
@@ -320,4 +327,3 @@ if __name__ == "__main__":
         finally:
                 run = Run()
                 run.stop()
-        '''
