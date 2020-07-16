@@ -37,41 +37,22 @@ pi.set_PWM_range(Pha1,range)
 pi.set_PWM_range(Ena2,range)
 pi.set_PWM_range(Pha2,range)
 
-#-- PWM control --#
-#-- duty ratio --#
-# duty ration = d/range
+#--- PWM control ---#
+#--- duty ratio (duty ration = d/range) ---#
 d = 0
 def high_speed():
         global d
         d = 192  # duty ratio = 3/4
-        '''
-        pi.set_PWM_dutycycle(Ena1, d)
-        pi.set_PWM_dutycycle(Pha1, d)
-        pi.set_PWM_dutycycle(Ena2, d)
-        pi.set_PWM_dutycycle(Pha2, d)
-        '''
 
 def normal_speed():
         global d
         d = 128  # duty ratio = 1/2
-        '''
-        pi.set_PWM_dutycycle(Ena1, d)
-        pi.set_PWM_dutycycle(Pha1, d)
-        pi.set_PWM_dutycycle(Ena2, d)
-        pi.set_PWM_dutycycle(Pha2, d)
-        '''
 
 def low_speed():
         global d
         d = 64  # duty ratio = 1/4
-        '''
-        pi.set_PWM_dutycycle(Ena1, d)
-        pi.set_PWM_dutycycle(Pha1, d)
-        pi.set_PWM_dutycycle(Ena2, d)
-        pi.set_PWM_dutycycle(Pha2, d)
-        '''
 
-#-- motor mode control definition --#
+#--- motor mode control definition ---#
 def setup_mode(a,b,c):
         pi.write(MODE,a)
         pi.write(LARGE,b)
@@ -84,7 +65,7 @@ def setup_IN(d,e,f,g,t):
         pi.write(Pha2,g)
         time.sleep(t)
 
-#-- run phase definition --#
+#--- run phase definition ---#
 class Run:
         def straight_h(self):
                 high_speed()
@@ -204,20 +185,21 @@ class Run:
                 #setup_IN(1,1,1,1)
                 #setup_OUT(0,0,1,1)
 
-#-- Timer --#
+#--- Timer ---#
 def timer():
         global cond
         time.sleep(1)
         cond = False
 
-#-- Run test --#
+#--- Run test ---#
 if __name__ == "__main__":
-        #-- run straight at high speed for 1 seconds --#
+        #--- run straight at high speed for 1 seconds ---#
         try:
-                cond = True  #use Timer                
+                #--- use Timer ---#
+                cond = True
                 thread = Thread(target = timer)
                 thread.start()
-                
+
                 while cond:
                         run = Run()
                         run. straight_h()
@@ -231,7 +213,7 @@ if __name__ == "__main__":
                 run = Run()
                 run.stop()
 
-        #-- run straight at normal speed  for 1 seconds --#
+        #--- run straight at normal speed  for 1 seconds ---#
         try:
                 cond = True
                 thread = Thread(target = timer)
@@ -250,7 +232,7 @@ if __name__ == "__main__":
                 run = Run()
                 run.stop()
 
-        #-- run straight at low speed  for 1 seconds --#
+        #--- run straight at low speed  for 1 seconds ---#
         try:
                 cond = True
                 thread = Thread(target = timer)
@@ -268,8 +250,9 @@ if __name__ == "__main__":
         finally:
                 run = Run()
                 run.stop()
-                '''
-                #-- run back for 1 seconds --#
+        '''
+        #-- run back for 1 seconds --#
+        try:
                 cond = True
                 thread = Thread(target = timer)
                 thread.start()
@@ -278,7 +261,15 @@ if __name__ == "__main__":
                 run.back()
                 time.sleep(1)
 
-                #-- rotation for 1 seconds --#
+        except KeyboardInterrupt:
+                run = Run()
+                run.stop()
+                
+        finally:
+                run = Run()
+                run.stop()
+
+        #-- rotation for 1 seconds --#
                 cond = True
                 thread = Thread(target = timer)
                 thread.start()
@@ -287,8 +278,16 @@ if __name__ == "__main__":
                 run.rotation()
                 time.sleep(1)
 
-                #-- turn right for 1 seconds --#
-                cond = True
+        except KeyboardInterrupt:
+                run = Run()
+                run.stop()
+                
+        finally:
+                run = Run()
+                run.stop()
+        
+        #-- turn right for 1 seconds --#
+        try:        cond = True
                 thread = Thread(target = timer)
                 thread.start()
 
@@ -296,7 +295,16 @@ if __name__ == "__main__":
                 run. turn_right()
                 time.sleep(1)
 
-                #-- turn left for 1 seconds --#
+        except KeyboardInterrupt:
+                run = Run()
+                run.stop()
+                
+        finally:
+                run = Run()
+                run.stop()
+
+        #-- turn left for 1 seconds --#
+        try:
                 cond = True
                 thread = Thread(target = timer)
                 thread.start()
@@ -304,4 +312,12 @@ if __name__ == "__main__":
                 while cond:
                 run. turn_left()
                 time.sleep(1)
-                '''
+
+        except KeyboardInterrupt:
+                run = Run()
+                run.stop()
+                
+        finally:
+                run = Run()
+                run.stop()
+        '''
