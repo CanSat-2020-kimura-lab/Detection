@@ -1,204 +1,101 @@
 import sys
-#-- ラズパイから各プログラムのパスを通す --#
-sys.path.append()
-sys.path.append()
-sys.path.append()
+sys.path.append('/home/pi/git/kimuralab/SensormoduleTest/Wireless')
+sys.path.append('/home/pi/git/kimuralab/SensormoduleTest/Camera')
+sys.path.append('/home/pi/git/kimuralab/SensormoduleTest/BMX055')
+sys.path.append('/home/pi/git/kimuralab/SensormoduleTest/GPS')
+sys.path.append('/home/pi/git/kimuralab/Detection/Run_phase')
 
+#--- original module ---#
 import gps_navigate
 import IM920
-#import pwm_control
+import BMX055
+import GPS
+import pwm_control
+import stuck
+import calibration
 
-import difflib
-import time 
-import datetime
+#--- must be installed module ---#
 import picamera
 import pigpio
 import serial
+import numpy as np
+
+#--- default module ---#
+import difflib
+import time
+import traceback
 from threading import Thread
 
-#-- GPIO connection --#
-Ena1 = 12
-Pha1 = 21
-Ena2 = 1
-Pha2 = 1
-'''
-OUT1 = 1
-OUT2 = 1
-OUT3 = 1
-OUT4 = 1
-'''
-LARGE = 8
-MODE = 7
-STBY = 18
+def timer(t):
+        global cond
+        time.sleep(t)
+        cond = False
 
-RX = 26
-
-#-- モーターはOUT1とOUT2、OUT3とOUT4で一つずつ接続されている --#
-
-pi = pigpio.pi()
-
-#-- Set the GPIO_mode --#
-pi.set_mode(Ena1, pigpio.OUTPUT)
-pi.set_mode(Pha1,pigpio.OUTPUT)
-pi.set_mode(Ena2, pigpio.OUTPUT)
-pi.set_mode(Pha2,pigpio.OUTPUT)
-pi.set_mode(MODE,pigpio.OUTPUT)
-pi.set_mode(LARGE,pigpio.OUTPUT)
-pi.set_mode(STBY,pigpio.OUTPUT)
-
-pi.set_mode(RX,pigpio.INPUT)
-
-'''
-pi.write(22,1)  #Wireless.SW:ON
-'''
-
-#-- GPS data --#
-def get_gpsdata():
-    # bb_serial_read_open(user_gpio, baud, bb_bits)
-    pi.bb_serial_read_open(RX, 9600, 8)
-    (count,data) = pi.bb_serial_read(RX) #説明書通りに書いたが意味不明
-    if count :
-        data = data.decode('utf-8', 'replace')
-
-#-- capture camera --#
-def camera:
-    with picamera.PiCamera() as camera:
-        camera.resolution = (640, 480)
-        camera.start_preview()
-        time.sleep(2)
-        capture_time = time.time()
-        camera.capture(str(capture_time) +'.jpg')
-
-#-- motor mode control definition --#
-def setup_mode(a,b,c):
-    pi.write(MODE,a)
-    pi.write(LARGE,b)
-    pi.write(STBY,c)
-
-def setup_IN(d,e,f,g):
-    pi.write(Ena1,d)
-    pi.write(Pha1,e)
-    pi.write(Ena2,f)
-    pi.write(Pha2,g)
-
-'''
-def setup_OUT(h,i,j,k):
-    pi.write(OUT1,h)
-    pi.write(OUT2,i)
-    pi.write(OUT3,j)
-    pi.write(OUT4,k)
-'''
-
-#-- run phase definition --#
-class Run:
-    def straight(self):
-        setup_mode(1,0,1)
-        setup_IN(1,1,1,1)
-        #setup_OUT(1,0,1,0)
-    
-    def back(self):
-        setup_mode(1,0,1)
-        setup_IN(1,0,1,0)
-        #setup_OUT(0,1,0,1)
-    
-    def rotation(self):
-        setup_mode(1,0,1)
-        setup_IN(1,1,1,0)
-        #setup_OUT(1,0,0,1)
-    
-    def stop(self):
-        setup_mode(1,0,1)
-        setup_IN(0,0,0,0)
-
-    def turn_right(self):
-        #-- stop --#
-        setup_mode(1,0,1)
-        setup_IN(0,0,0,0)
+if __name__ == "__main__":
+        #--- difine goal latitude and longitude ---#
+        lon2 = 139.906
+        lat2 = 35.915
+        #------------- program start -------------#
+        #------------- calibration -------------#
+        #--- calculate offset ---#
+        magdata = calibration.magdata_matrix()        
+        magdata_offset = calibration.calculate_offset(magdata)
+        magx_off = magdata_offset[3]
+        magy_off = magdata_offset[4]
+        magz_off = magdata_offset[5]
         time.sleep(1)
-        #-- rotate only right wheel --#
-        setup_mode(1,0,1)
-        setup_IN(1,1,1,1)
-        #setup_OUT(1,1,0,0)
-       
-    def turn_left(self):
-        #-- stop --#
-        setup_mode(1,0,1)
-        setup_IN(0,0,0,0)
-        time.sleep(1)
-        #-- rotate only left wheel --#
-        setup_mode(1,0,1)
-        setup_IN(1,1,1,1)
-        #setup_OUT(0,0,1,1)
+        #--- calculate θ ---#
+        data = calibration.get_data()
+        magx = data[0]
+        magy = data[1]
+        magz = data[2]
+        accx = data[3]
+        accy = data[4]
+        accz = data[5]
+        θ = calibration.calculate_angle_2D(magx,magy,magx_off,magy_off)
+        #θ = calculate_angle_3D(accx,accy,accz,magx,magy,magz,magx_off,magy_off,magz_off)
+        #--- rotate contorol ---#
+        calibration.rotate_control(θ,lon2,lat2)
 
-#-- obtain calculated data from GPS-Navigate.py --#
-def direction():
-    global result
-    result = gps_navigate.vincenty_inverse(120,120,120,120) #resultは辞書型のオブジェクト
-    print('距離：%s(m)' % round(result['distance'], 3))
-    print('方位角(始点→終点)：%s' % result['azimuth1']) # azimuth = 方位角
-    print('方位角(終点→始点)：%s' % result['azimuth2'])
+        direction = calibration.calculate_direction(lon2,lat2)
+        goal_distance = direction["distance"]
+        #------------- GPS navigate -------------#
+        while goal_distance >= 5:
+                location = stuck.stuck_detection1()
+                longitude_past = location[0]
+                latitude_past = location[1]
+                #--- run straight ---#
+                #--- use Timer ---#
+                global cond
+                cond = True
+                thread = Thread(target = timer,args=([20]))
+                thread.start()
 
-#-- note start time  --#
-start_time = datetime.datetime
-print(start_time)
-time_log = time.time
+                try:
+                        run = pwm_control.Run()
+                        run.straight_h()
+                
+                except KeyboardInterrupt:
+                        run = pwm_control.Run()
+                        run.stop()
 
-cond = True
-
-def timer():
-    global cond
-    time.sleep(5)
-    cond = False
-
-direction()
-distance = result['distance']
-azimuth1 = result['azimuth1']
-
-#-- run by GPS guide if we aren't within 5m from the goal --#
-while distance >5:
-    #-- 進行方向がゴール方向になるまで回転制御 --#
-    if azimuth1 > 10 and azimuth1 < 350:
-        while True:
-            run = Run()
-            run.turn_left()
-
-            if azimuth1 < 10 and azimuth1 > 350:
-                break   # escape from while loop
-    
-    #-- run phase --#
-    while True:
-        run.straight()
-        now = time.time
-        print(now) 
-        #-- キャリブレーションから30秒経ったら --#
-        if  now - time_log >= 30:
-            IM920.Send(19200,'30 secoonds have passed')
-        #-- stop to calibration if 60 seconds have passed since the last calibration --#
-        if now - time_log >= 60:
-            run = Run()           
-            run.stop()
-            time.sleep(5)
-            thread = Thread(target = timer)
-            thread.start()
-            #-- calibration for 5 seconds --#
-            while cond:
-                run.rotation()
-            
-            time.sleep(3)
-            #-- 進行方向がゴール方向になるまで回転制御 --#
-            if azimuth1 > 10 and azimuth1 < 350:
-                while True:
-                    direction()
-                    run = Run()
-                    run.turn_left()
-
-                    if azimuth1 < 10 and azimuth1 > 350:
-                        break   # escape from while loop
-    
-            #-- キャリブレーションが終了した時刻を記録 --#    
-            global time_log
-            time_log = time.time
-            print(time_log)
-            #-- 送信と撮影 --#
-            IM920.Send(19200,'chalibration was finished')
-            camera()
+                finally:
+                        run = pwm_control.Run()
+                        run.stop()
+                
+                #--- Send GPS data ---#
+                GPS.openGPS()
+                GPS_data = GPS.readGPS()
+                IM920.Send(GPS_data)
+                #--- calculate  goal direction ---#
+                direction = calibration.calculate_direction(lon2,lat2)
+                goal_distance = direction["distance"]
+                #--- stuck detection ---#
+                moved_distance = stuck.stuck_detection2(longitude_past,latitude_past)
+                if moved_distance != 0:
+                        pass                                        
+                else:
+                        #--- stuck escape ---#
+                        move_judge = stuck.stuck_confirm()
+                        print(move_judge)
+                        stuck.stuck_escape(move_judge)
