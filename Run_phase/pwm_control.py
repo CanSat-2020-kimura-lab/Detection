@@ -142,10 +142,6 @@ class Run:
                 setup_IN(0,0,0,0,1.0)
 
         def turn_right(self):
-                #-- stop --#
-                setup_mode(1,0,1)
-                setup_IN(0,0,0,0,1.0)
-                time.sleep(1)
                 #-- right wheel is high speed left wheel is low speed --#
                 #high_speed()
                 d1 = 192
@@ -165,10 +161,6 @@ class Run:
                 #setup_OUT(1,1,0,0)
         
         def turn_left(self):
-                #-- stop --#
-                setup_mode(1,0,1)
-                setup_IN(0,0,0,0,1.0)
-                time.sleep(1)
                 #-- right wheel is high speed left wheel is low speed --#
                 low_speed()
                 d1 = d
