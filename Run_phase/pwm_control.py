@@ -147,10 +147,10 @@ class Run:
                 setup_IN(0,0,0,0,1.0)
                 time.sleep(1)
                 #-- right wheel is high speed left wheel is low speed --#
-                high_speed()
-                d1 = d
-                low_speed()
-                d2 = d
+                #high_speed()
+                d1 = 192
+                #low_speed()
+                d2 = 64
                 setup_mode(1,0,1)
                 pi.set_PWM_dutycycle(Ena1, d1)
                 pi.set_PWM_dutycycle(Pha1, d1)
@@ -186,9 +186,9 @@ class Run:
                 #setup_OUT(0,0,1,1)
 
 #--- Timer ---#
-def timer():
+def timer(t):
         global cond
-        time.sleep(1)
+        time.sleep(t)
         cond = False
 
 #--- Run test ---#
@@ -198,7 +198,7 @@ if __name__ == "__main__":
         try:
                 #--- use Timer ---#
                 cond = True
-                thread = Thread(target = timer)
+                thread = Thread(target = timer,args=([4]))
                 thread.start()
 
                 while cond:
@@ -217,7 +217,7 @@ if __name__ == "__main__":
         #--- run straight at normal speed  for 1 seconds ---#
         try:
                 cond = True
-                thread = Thread(target = timer)
+                thread = Thread(target = timer,args=([4]))
                 thread.start()
 
                 while cond:
@@ -236,7 +236,7 @@ if __name__ == "__main__":
         #--- run straight at low speed  for 1 seconds ---#
         try:
                 cond = True
-                thread = Thread(target = timer)
+                thread = Thread(target = timer,args=([4]))
                 thread.start()
 
                 while cond:
@@ -251,11 +251,11 @@ if __name__ == "__main__":
         finally:
                 run = Run()
                 run.stop()
-        '''
+        
         #-- run back for 1 seconds --#
         try:
                 cond = True
-                thread = Thread(target = timer)
+                thread = Thread(target = timer,args=([4]))
                 thread.start()
 
                 while cond:
@@ -274,7 +274,7 @@ if __name__ == "__main__":
         #-- rotation for 1 seconds --#
         try:
                 cond = True
-                thread = Thread(target = timer)
+                thread = Thread(target = timer,args=([4]))
                 thread.start()
 
                 while cond:
@@ -289,11 +289,11 @@ if __name__ == "__main__":
         finally:
                 run = Run()
                 run.stop()
-        
-        #-- turn right for 1 seconds --#
+'''        
+        #-- turn right for 4 seconds --#
         try:
                 cond = True
-                thread = Thread(target = timer)
+                thread = Thread(target = timer,args=([4]))
                 thread.start()
 
                 while cond:
@@ -308,11 +308,11 @@ if __name__ == "__main__":
         finally:
                 run = Run()
                 run.stop()
-
+'''
         #-- turn left for 1 seconds --#
         try:
                 cond = True
-                thread = Thread(target = timer)
+                thread = Thread(target = timer,args=([4]))
                 thread.start()
 
                 while cond:
@@ -327,3 +327,4 @@ if __name__ == "__main__":
         finally:
                 run = Run()
                 run.stop()
+'''
