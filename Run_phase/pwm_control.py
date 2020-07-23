@@ -42,7 +42,7 @@ pi.set_PWM_range(Pha2,range)
 d = 0
 def high_speed():
         global d
-        d = 192  # duty ratio = 3/4
+        d = 255  # duty ratio = 3/4
 
 def normal_speed():
         global d
@@ -76,8 +76,6 @@ class Run:
                 pi.set_PWM_dutycycle(Ena2, d)
                 pi.set_PWM_dutycycle(Pha2, d)
 
-                #setup_IN(d,d,d,d)
-                #setup_OUT(d,0,d,0)
                 #setup_IN(1,1,1,1)
                 #setup_OUT(1,0,1,0)
 
@@ -90,8 +88,6 @@ class Run:
                 pi.set_PWM_dutycycle(Ena2, d)
                 pi.set_PWM_dutycycle(Pha2, d)
 
-                #setup_IN(d,d,d,d)
-                #setup_OUT(d,0,d,0)
                 #setup_IN(1,1,1,1)
                 #setup_OUT(1,0,1,0)
 
@@ -104,8 +100,6 @@ class Run:
                 pi.set_PWM_dutycycle(Ena2, d)
                 pi.set_PWM_dutycycle(Pha2, d)
 
-                #setup_IN(d,d,d,d)
-                #setup_OUT(d,0,d,0)
                 #setup_IN(1,1,1,1)
                 #setup_OUT(1,0,1,0)
         
@@ -118,8 +112,6 @@ class Run:
                 pi.set_PWM_dutycycle(Ena2, d)
                 #pi.set_PWM_dutycycle(Pha2, d)
 
-                #setup_IN(d,0,d,0)
-                #setup_OUT(0,d,0,d)
                 #setup_IN(1,0,1,0)
                 #setup_OUT(0,1,0,1)
         
@@ -132,8 +124,6 @@ class Run:
                 pi.set_PWM_dutycycle(Ena2, d)
                 #pi.set_PWM_dutycycle(Pha2, d)
 
-                #setup_IN(d,d,d,0)
-                #setup_OUT(d,0,0,d)
                 #setup_IN(1,1,1,0)
                 #setup_OUT(1,0,0,1)
         
@@ -153,27 +143,30 @@ class Run:
                 pi.set_PWM_dutycycle(Ena2, d2)
                 pi.set_PWM_dutycycle(Pha2, d2)
 
-                #setup_IN(d1,d1,d2,d2)
-                #setup_OUT(d,0,d,0)
-
                 #-- rotate only right wheel --#
                 #setup_IN(1,1,1,1)
                 #setup_OUT(1,1,0,0)
         
-        def turn_left(self):
+        def turn_right_l(self):
                 #-- right wheel is high speed left wheel is low speed --#
-                low_speed()
-                d1 = d
-                high_speed()
-                d2 = d
+                d1 = 128
+                d2 = 32
                 setup_mode(1,0,1)
                 pi.set_PWM_dutycycle(Ena1, d1)
                 pi.set_PWM_dutycycle(Pha1, d1)
                 pi.set_PWM_dutycycle(Ena2, d2)
                 pi.set_PWM_dutycycle(Pha2, d2)
 
-                #setup_IN(d,d,d,d)
-                #setup_OUT(0,0,d,d)
+        def turn_left(self):
+                #-- right wheel is high speed left wheel is low speed --#
+                d1 = 32
+                d2 = 128
+                setup_mode(1,0,1)
+                pi.set_PWM_dutycycle(Ena1, d1)
+                pi.set_PWM_dutycycle(Pha1, d1)
+                pi.set_PWM_dutycycle(Ena2, d2)
+                pi.set_PWM_dutycycle(Pha2, d2)
+
                 #setup_IN(1,1,1,1)
                 #setup_OUT(0,0,1,1)
 
@@ -186,7 +179,26 @@ def timer(t):
 #--- Run test ---#
 if __name__ == "__main__":
         '''
-        #--- run straight at high speed for 1 seconds ---#
+        try:
+                #--- use Timer ---#
+                cond = True
+                thread = Thread(target = timer,args=([10]))
+                thread.start()
+
+                while cond:
+                        run = Run()
+                        #run. straight_h()
+                        run.straight_n()
+                time.sleep(1)
+
+        except KeyboardInterrupt:
+                run = Run()
+                run.stop()
+                
+        finally:
+                run = Run()
+                run.stop()
+        '''
         try:
                 #--- use Timer ---#
                 cond = True
@@ -195,45 +207,11 @@ if __name__ == "__main__":
 
                 while cond:
                         run = Run()
-                        run. straight_h()
-                time.sleep(1)
-
-        except KeyboardInterrupt:
-                run = Run()
-                run.stop()
-                
-        finally:
-                run = Run()
-                run.stop()
-
-        #--- run straight at normal speed  for 1 seconds ---#
-        try:
-                cond = True
-                thread = Thread(target = timer,args=([4]))
-                thread.start()
-
-                while cond:
-                        run = Run()
-                        run. straight_n()
-                time.sleep(1)
-
-        except KeyboardInterrupt:
-                run = Run()
-                run.stop()
-                
-        finally:
-                run = Run()
-                run.stop()
-
-        #--- run straight at low speed  for 1 seconds ---#
-        try:
-                cond = True
-                thread = Thread(target = timer,args=([4]))
-                thread.start()
-
-                while cond:
-                        run = Run()
-                        run. straight_l()
+                        #run.back()
+                        #run.rotation()
+                        #run.turn_right()
+                        run.turn_right_l()
+                        #run.turn_left()
                 time.sleep(1)
 
         except KeyboardInterrupt:
@@ -244,16 +222,16 @@ if __name__ == "__main__":
                 run = Run()
                 run.stop()
         
-        #-- run back for 1 seconds --#
         try:
+                #--- use Timer ---#
+                global cond
                 cond = True
-                thread = Thread(target = timer,args=([4]))
+                thread = Thread(target = timer,args=([0.5]))
                 thread.start()
-
                 while cond:
                         run = Run()
-                        run.back()
-                time.sleep(1)
+                        run.turn_right()
+                time.sleep(0.5)
 
         except KeyboardInterrupt:
                 run = Run()
@@ -262,61 +240,3 @@ if __name__ == "__main__":
         finally:
                 run = Run()
                 run.stop()
-
-        #-- rotation for 1 seconds --#
-        try:
-                cond = True
-                thread = Thread(target = timer,args=([4]))
-                thread.start()
-
-                while cond:
-                        run = Run()
-                        run.rotation()
-                time.sleep(1)
-
-        except KeyboardInterrupt:
-                run = Run()
-                run.stop()
-                
-        finally:
-                run = Run()
-                run.stop()
-'''        
-        #-- turn right for 4 seconds --#
-        try:
-                cond = True
-                thread = Thread(target = timer,args=([4]))
-                thread.start()
-
-                while cond:
-                        run = Run()
-                        run. turn_right()
-                time.sleep(1)
-
-        except KeyboardInterrupt:
-                run = Run()
-                run.stop()
-                
-        finally:
-                run = Run()
-                run.stop()
-'''
-        #-- turn left for 1 seconds --#
-        try:
-                cond = True
-                thread = Thread(target = timer,args=([4]))
-                thread.start()
-
-                while cond:
-                        run = Run()
-                        run. turn_left()
-                time.sleep(1)
-
-        except KeyboardInterrupt:
-                run = Run()
-                run.stop()
-                
-        finally:
-                run = Run()
-                run.stop()
-'''
