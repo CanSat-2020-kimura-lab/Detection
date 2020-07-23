@@ -55,6 +55,11 @@ def ParaDetection(imgpath, H_min, H_max, S_thd):
 		return[-1, 0, imgname]
 
 if __name__ == "__main__":
+	
+	TSL2561.tsl2561_setup()
+	while 1:
+		ParaJudge(100)
+		time.sleep(1)
 	try:
 		while 1:
 			f, a, n = ParaDetection("/home/pi/photo/photo", 200, 10, 120)
