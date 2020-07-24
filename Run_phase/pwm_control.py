@@ -198,7 +198,7 @@ if __name__ == "__main__":
         finally:
                 run = Run()
                 run.stop()
-        '''
+                
         try:
                 #--- use Timer ---#
                 cond = True
@@ -221,17 +221,21 @@ if __name__ == "__main__":
         finally:
                 run = Run()
                 run.stop()
-        
+        '''
         try:
-                #--- use Timer ---#
-                global cond
-                cond = True
-                thread = Thread(target = timer,args=([0.5]))
-                thread.start()
-                while cond:
-                        run = Run()
-                        run.turn_right()
-                time.sleep(0.5)
+                start = time.time()
+                t = 0
+                while t < 10:
+                        #--- use Timer ---#
+                        global cond
+                        cond = True
+                        thread = Thread(target = timer,args=([0.5]))
+                        thread.start()
+                        while cond:
+                                run = Run()
+                                run.turn_right()
+                        time.sleep(0.5)
+                        t = time.time() - start
 
         except KeyboardInterrupt:
                 run = Run()
