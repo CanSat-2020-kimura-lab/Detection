@@ -30,59 +30,10 @@ def timer(t):
         global cond
         time.sleep(t)
         cond = False
-
-if __name__ == "__main__":
-        #--- difine goal latitude and longitude ---#
-        lon2 = 139.906
-        lat2 = 35.915
-        #------------- program start -------------#
-        #------------- calibration -------------#
-        #--- calculate offset ---#
-        magdata = calibration.magdata_matrix()        
-        magdata_offset = calibration.calculate_offset(magdata)
-        magx_off = magdata_offset[3]
-        magy_off = magdata_offset[4]
-        magz_off = magdata_offset[5]
-        time.sleep(1)
-        #--- calculate θ ---#
-        data = calibration.get_data()
-        magx = data[0]
-        magy = data[1]
-        magz = data[2]
-        accx = data[3]
-        accy = data[4]
-        accz = data[5]
-        θ = calibration.calculate_angle_2D(magx,magy,magx_off,magy_off)
-        #θ = calculate_angle_3D(accx,accy,accz,magx,magy,magz,magx_off,magy_off,magz_off)
-        #--- rotate contorol ---#
-        calibration.rotate_control(θ,lon2,lat2)
-
-        direction = calibration.calculate_direction(lon2,lat2)
-        goal_distance = direction["distance"]
-        #------------- GPS navigate -------------#
-        while goal_distance >= 5:
-                location = stuck.stuck_detection1()
-                longitude_past = location[0]
-                latitude_past = location[1]
-                #--- run straight ---#
-                #--- use Timer ---#
-                global cond
-                cond = True
-                thread = Thread(target = timer,args=([20]))
-                thread.start()
-
-                try:
-                        run = pwm_control.Run()
-                        run.straight_h()
-                
-                except KeyboardInterrupt:
-                        run = pwm_control.Run()
-                        run.stop()
-
-                finally:
-                        run = pwm_control.Run()
-                        run.stop()
-                
+'''
+def timer2(t):
+        global cond,goal_distance,azimuth1
+        for i in range(2):
                 #--- Send GPS data ---#
                 GPS.openGPS()
                 GPS_data = GPS.readGPS()
@@ -90,12 +41,114 @@ if __name__ == "__main__":
                 #--- calculate  goal direction ---#
                 direction = calibration.calculate_direction(lon2,lat2)
                 goal_distance = direction["distance"]
-                #--- stuck detection ---#
-                moved_distance = stuck.stuck_detection2(longitude_past,latitude_past)
-                if moved_distance != 0:
-                        pass                                        
-                else:
-                        #--- stuck escape ---#
-                        move_judge = stuck.stuck_confirm()
-                        print(move_judge)
-                        stuck.stuck_escape(move_judge)
+                azimuth = direction["azimuth1"]
+                #--- calculate θ ---#
+                data = calibration.get_data()
+                magx = data[0]
+                magy = data[1]
+                magz = data[2]
+                accx = data[3]
+                accy = data[4]
+                accz = data[5]
+                θ = calibration.calculate_angle_2D(magx,magy,magx_off,magy_off)
+                #θ = calculate_angle_3D(accx,accy,accz,magx,magy,magz,magx_off,magy_off,magz_off)
+                time.sleep(t)
+        cond = False
+'''
+if __name__ == "__main__":
+        #--- difine goal latitude and longitude ---#
+        lon2 = 139.5430
+        lat2 = 35.553
+        #------------- program start -------------#
+        direction = calibration.calculate_direction(lon2,lat2)
+        goal_distance = direction["distance"]
+        #------------- GPS navigate -------------#
+        while goal_distance >= 5:
+                #------------- calibration -------------#
+                #--- calculate offset ---#
+                magdata = calibration.magdata_matrix()
+                magdata_offset = calibration.calculate_offset(magdata)
+                magx_off = magdata_offset[3]
+                magy_off = magdata_offset[4]
+                magz_off = magdata_offset[5]
+                time.sleep(1)
+                #--- calculate θ ---#
+                data = calibration.get_data()
+                magx = data[0]
+                magy = data[1]
+                magz = data[2]
+                accx = data[3]
+                accy = data[4]
+                accz = data[5]
+                θ = calibration.calculate_angle_2D(magx,magy,magx_off,magy_off)
+                #θ = calculate_angle_3D(accx,accy,accz,magx,magy,magz,magx_off,magy_off,magz_off)
+                #------------- rotate contorol -------------#
+                calibration.rotate_control(θ,lon2,lat2)
+                location = stuck.stuck_detection1()
+                longitude_past = location[0]
+                latitude_past = location[1]
+
+                #------------- run straight -------------#
+                for i in range(2):
+                        try:
+                                for i in range(2):
+                                        run = pwm_control.Run()
+                                        run.straight_h()
+                                        #--- Send GPS data ---#
+                                        GPS.openGPS()
+                                        GPS_data = GPS.readGPS()
+                                        IM920.Send(GPS_data)
+                                        #--- calculate  goal direction ---#
+                                        direction = calibration.calculate_direction(lon2,lat2)
+                                        goal_distance = direction["distance"]
+                                        azimuth = direction["azimuth1"]
+                                        #--- calculate θ ---#
+                                        data = calibration.get_data()
+                                        magx = data[0]
+                                        magy = data[1]
+                                        magz = data[2]
+                                        accx = data[3]
+                                        accy = data[4]
+                                        accz = data[5]
+                                        θ = calibration.calculate_angle_2D(magx,magy,magx_off,magy_off)
+                                        #θ = calculate_angle_3D(accx,accy,accz,magx,magy,magz,magx_off,magy_off,magz_off)
+
+                                        if azimuth - 15 > θ:
+                                                run = pwm_control.Run()
+                                                run.turn_right()
+                                                time.sleep(0.5)
+
+                                        elif θ > azimuth + 15:
+                                                run = pwm_control.Run()
+                                                run.turn_left()
+                                                time.sleep(0.5)
+
+                                        else:
+                                                run = pwm_control.Run()
+                                                run.turn_right()
+                                                time.sleep(0.5)
+                                      
+                        except KeyboardInterrupt:
+                                run = pwm_control.Run()
+                                run.stop()
+
+                        finally:
+                                run = pwm_control.Run()
+                                run.stop()
+
+                        #--- Send GPS data ---#
+                        GPS.openGPS()
+                        GPS_data = GPS.readGPS()
+                        IM920.Send(GPS_data)
+                        #--- calculate  goal direction ---#
+                        direction = calibration.calculate_direction(lon2,lat2)
+                        goal_distance = direction["distance"]
+                        #--- stuck detection ---#
+                        moved_distance = stuck.stuck_detection2(longitude_past,latitude_past)
+                        if moved_distance >= 5:
+                                pass
+                        else:
+                                #--- stuck escape ---#
+                                move_judge = stuck.stuck_confirm()
+                                print(move_judge)
+                                stuck.stuck_escape(move_judge)
