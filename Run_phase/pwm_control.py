@@ -178,7 +178,7 @@ def timer(t):
 
 #--- Run test ---#
 if __name__ == "__main__":
-        '''
+        
         try:
                 #--- use Timer ---#
                 cond = True
@@ -198,7 +198,7 @@ if __name__ == "__main__":
         finally:
                 run = Run()
                 run.stop()
-                
+        '''        
         try:
                 #--- use Timer ---#
                 cond = True
@@ -221,7 +221,7 @@ if __name__ == "__main__":
         finally:
                 run = Run()
                 run.stop()
-        '''
+        
         try:
                 start = time.time()
                 t = 0
@@ -244,3 +244,4 @@ if __name__ == "__main__":
         finally:
                 run = Run()
                 run.stop()
+        '''
