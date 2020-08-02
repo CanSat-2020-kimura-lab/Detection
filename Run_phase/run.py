@@ -18,10 +18,10 @@ import Calibration
 
 #--- must be installed module ---#
 import pigpio
-import numpy as np
+#import numpy as np
 
 #--- default module ---#
-import difflib
+#import difflib
 import time
 import traceback
 from threading import Thread
@@ -34,9 +34,11 @@ def timer(t):
 	cond = False
 
 if __name__ == "__main__":
+	BMX055.bmx055_setup()
+	GPS.openGPS()
 	#--- difine goal latitude and longitude ---#
-	lon2 = 139.5430
-	lat2 = 35.553
+	lon2 = 139.9060815
+	lat2 = 35.9143235
 	#------------- program start -------------#
 	direction = Calibration.calculate_direction(lon2,lat2)
 	goal_distance = direction["distance"]
@@ -54,13 +56,8 @@ if __name__ == "__main__":
 		data = Calibration.get_data()
 		magx = data[0]
 		magy = data[1]
-		magz = data[2]
-		accx = data[3]
-		accy = data[4]
-		accz = data[5]
 		#--- 0 <= θ <= 360 ---#
 		θ = Calibration.calculate_angle_2D(magx,magy,magx_off,magy_off)
-		#θ = calculate_angle_3D(accx,accy,accz,magx,magy,magz,magx_off,magy_off,magz_off)
 		#------------- rotate contorol -------------#
 		Calibration.rotate_control(θ,lon2,lat2)
 		location = Stuck.stuck_detection1()
@@ -106,13 +103,8 @@ if __name__ == "__main__":
 					data = Calibration.get_data()
 					magx = data[0]
 					magy = data[1]
-					magz = data[2]
-					accx = data[3]
-					accy = data[4]
-					accz = data[5]
 					#--- 0 <= θ <= 360 ---#
 					θ = Calibration.calculate_angle_2D(magx,magy,magx_off,magy_off)
-					#θ = calculate_angle_3D(accx,accy,accz,magx,magy,magz,magx_off,magy_off,magz_off)
 
 					#--- if rover go wide left, turn right ---#
 					#--- 15 <= azimuth <= 360 ---#
