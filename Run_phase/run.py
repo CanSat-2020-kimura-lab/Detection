@@ -43,7 +43,7 @@ if __name__ == "__main__":
 	direction = Calibration.calculate_direction(lon2,lat2)
 	goal_distance = direction["distance"]
 	#------------- GPS navigate -------------#
-	while goal_distance >= 5:
+	while goal_distance >= 15:
 		#------------- Calibration -------------#
 		#--- calculate offset ---#
 		magdata = Calibration.magdata_matrix()
@@ -95,7 +95,7 @@ if __name__ == "__main__":
 					#--- calculate  goal direction ---#
 					direction = Calibration.calculate_direction(lon2,lat2)
 					goal_distance = direction["distance"]
-					if goal_distance <= 5:
+					if goal_distance <= 15:
 						break
 					#--- 0 <= azimuth <= 360 ---#
 					azimuth = direction["azimuth1"]
@@ -165,7 +165,7 @@ if __name__ == "__main__":
 					#--- calculate  goal direction ---#
 					direction = Calibration.calculate_direction(lon2,lat2)
 					goal_distance = direction["distance"]
-					if goal_distance <= 5:
+					if goal_distance <= 15:
 						break
 				      
 			except KeyboardInterrupt:
