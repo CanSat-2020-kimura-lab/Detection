@@ -46,7 +46,7 @@ def GoalDetection(imgpath, H_min, H_max, S_thd, G_thd):
 		mask[((h < H_max) | (h > H_min)) & (s > S_thd)] = 255
 
 		#contour
-		mask, contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+		contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
 		#max area
 		max_area = 0
