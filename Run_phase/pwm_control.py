@@ -170,7 +170,7 @@ class Run:
                 #setup_IN(1,1,1,1)
                 #setup_OUT(0,0,1,1)
 
-        def turn_right_r(self):
+        def turn_right_l(self):
                 #-- right wheel is high speed left wheel is low speed --#
                 d1 = 32
                 d2 = 128
