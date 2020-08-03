@@ -36,14 +36,14 @@ def timer(t):
 if __name__ == "__main__":
 	BMX055.bmx055_setup()
 	GPS.openGPS()
-	print('Start!')
+	print('Run Phase Start!')
 	#--- difine goal latitude and longitude ---#
 	lon2 = 139.9060815
 	lat2 = 35.9143235
 	#------------- program start -------------#
 	direction = Calibration.calculate_direction(lon2,lat2)
 	goal_distance = direction["distance"]
-	print(goal_distance)
+	print('goal distance = '+str(goal_distance))
 	#------------- GPS navigate -------------#
 	while goal_distance >= 15:
 		#------------- Calibration -------------#
@@ -66,39 +66,21 @@ if __name__ == "__main__":
 		location = Stuck.stuck_detection1()
 		longitude_past = location[0]
 		latitude_past = location[1]
+		#--- initialize count ---#
+		loop_count = 0
+		stuck_count = 0
 
 		#------------- run straight -------------#
 		try:
-			for i in range(4):
+			if loop_count <= 5:
 				print('Go straight')
 				run = pwm_control.Run()
 				run.straight_h()
 				time.sleep(1)
-				#--- Send GPS data ---#
-				try:
-					while True:
-						value = GPS.readGPS()
-						latitude_new = value[1]
-						longitude_new = value[2]
-						print(value)
-						print('longitude = '+str(longitude_new))
-						print('latitude = '+str(latitude_new))
-						time.sleep(1)
-						if latitude_new != -1.0 and longitude_new != 0.0 :
-							break
-				except KeyboardInterrupt:
-					GPS.closeGPS()
-					print("\r\nKeyboard Intruppted, Serial Closed")
-
-				except:
-					GPS.closeGPS()
-					print (traceback.format_exc())
-				
-				IM920.Send(GPS_data)
 				#--- calculate  goal direction ---#
 				direction = Calibration.calculate_direction(lon2,lat2)
 				goal_distance = direction["distance"]
-				print('goal_distance ='+str(goal_distance))
+				print('goal distance ='+str(goal_distance))
 				if goal_distance <= 15:
 					break
 				#--- 0 <= azimuth <= 360 ---#
@@ -144,39 +126,26 @@ if __name__ == "__main__":
 				#--- stuck detection ---#
 				moved_distance = Stuck.stuck_detection2(longitude_past,latitude_past)
 				if moved_distance >= 5:
-					IM920.Send("rover moved!")
-					print('Rover moving now')
+					IM920.Send("Rover is moving now")
+					print('Rover is moving now')
+					stuck_count = 0
 				else:
 					#--- stuck escape ---#
+					IM920.Send("Rover stucks now")
 					print('Stuck!')
 					Stuck.stuck_escape()
-
-				#--- Send GPS data ---#
-				try:
-					while True:
-						value = GPS.readGPS()
-						latitude_new = value[1]
-						longitude_new = value[2]
-						print(value)
-						print('longitude = '+str(longitude_new))
-						print('latitude = '+str(latitude_new))
-						time.sleep(1)
-						if latitude_new != -1.0 and longitude_new != 0.0 :
-							break
-				except KeyboardInterrupt:
-					GPS.closeGPS()
-					print("\r\nKeyboard Intruppted, Serial Closed")
-
-				except:
-					GPS.closeGPS()
-					print (traceback.format_exc())
-				
-				IM920.Send(GPS_data)
+					loop_count -= 1
+					stuck_count += 1
+					if stuck_count >= 3:
+						print("Rover can't move any more")
+						break
 				#--- calculate  goal direction ---#
 				direction = Calibration.calculate_direction(lon2,lat2)
 				goal_distance = direction["distance"]
 				if goal_distance <= 15:
 					break
+				loop_count += 1
+				print('loop count is '+str(loop_count))
 
 					
 		except KeyboardInterrupt:
@@ -186,3 +155,7 @@ if __name__ == "__main__":
 		finally:
 			run = pwm_control.Run()
 			run.stop()
+	
+	#--- If rover reached 5m from goal, rover will stop ---#
+	run = pwm_control.Run()
+	run.stop()
