@@ -12,10 +12,12 @@ import math
 anypress = 0
 Pcount = 0
 GAcount = 0
-Mcount = 0
+Latestgpsalt = 0
+Prevgpsalt = 0
 bme280data = []
-gpsdata = []
+gpsdata = [0.0, 0.0, 0.0, 0.0, 0.0]
 pressdata = [0.0, 0.0, 0.0, 0.0]
+
 def Pressdetect(anypress):
     global bme280data
     global Pcount
@@ -60,12 +62,12 @@ def gpsdetect(anyalt):
         gpsdata = GPS.readGPS()
         Latestgpsalt = gpsdata[3]
         Prvevgpalt = gpsdata[3]
-        daltGA = abs(latestgpsalt - prevgpsalt)
-        print(str(Latestgpsslt)+"   :   "+str(prevgpsalt))
+        daltGA = abs(Latestgpsalt - Prevgpsalt)
+        print(str(Latestgpsslt)+"   :   "+str(Prevgpsalt))
         if daltGA < anyalt:
             GAcount += 1
             if GAcount > 4:
-                gpslandjuge = 1
+                gpslandjudge = 1
                 print("gpslandjudge")
             else:
                 gpslandjudge = 0
