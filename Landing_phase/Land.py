@@ -41,7 +41,7 @@ def Pressdetect(anypress):
             Pcount += 1
             print(Pcount)
             if Pcount > 4:
-                presslandudge = 1
+                presslandjudge = 1
                 print("presslandjudge")
         else:
             Pcount = 0
@@ -58,10 +58,9 @@ def gpsdetect(anyalt):
     global GAcount
     gpslandjudge = 0
     try:
-        gpsalt = 0
         gpsdata = GPS.readGPS()
         Latestgpsalt = gpsdata[3]
-        Prvevgpalt = gpsdata[3]
+        Prevgpsalt = gpsdata[3]
         daltGA = abs(Latestgpsalt - Prevgpsalt)
         print(str(Latestgpsslt)+"   :   "+str(Prevgpsalt))
         if daltGA < anyalt:
