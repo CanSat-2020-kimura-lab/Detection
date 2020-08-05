@@ -69,7 +69,7 @@ def pressdetect(anypress):
 	except:
 		print(traceback.format_exc())
 		presscount = 0
-		ltreleasejudge = 2
+		pressreleasejudge = 2
 	return pressreleasejudge, presscount
 
 if __name__=="__main__":
