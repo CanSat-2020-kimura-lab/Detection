@@ -44,7 +44,7 @@ def Pressdetect(anypress):
             #print(Pcount)
             if Pcount > 4:
                 presslandjudge = 1
-                #print("presslandjudge")
+                print("presslandjudge")
         else:
             Pcount = 0
             #print(Pcount)
@@ -69,7 +69,7 @@ def gpsdetect(anyalt):
             GAcount += 1
             if GAcount > 4:
                 gpslandjudge = 1
-                #print("gpslandjudge")
+                print("gpslandjudge")
             else:
                 gpslandjudge = 0
     except:
