@@ -1,6 +1,7 @@
 import sys
 sys.path.append('/home/pi/git/kimuralab/SensorModuleTest/BME280')
 sys.path.append('/home/pi/git/kimuralab/SensorModuleTest/TSL2561')
+sys.path.append('/home/pi/git/kimuralab/SensorModuleTest/GPS')
 
 import time
 import serial
@@ -8,6 +9,7 @@ import pigpio
 import BME280
 import traceback
 import math
+import GPS
 
 anypress = 0
 Pcount = 0
@@ -79,6 +81,7 @@ def gpsdetect(anyalt):
 if __name__=="__main__":
     
     print("Start")
+    GPS.openGPS()
     BME280.bme280_setup()
     BME280.bme280_calib_param()
     while 1:
