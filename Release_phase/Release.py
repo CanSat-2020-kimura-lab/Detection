@@ -64,7 +64,7 @@ def pressdetect(anypress):
 				pressreleasejudge = 1
 				print("pressreleasejudge")
 		else:
-			Presscount = 0
+			presscount = 0
 		#print(str(latestpress) + "	:	" + str(prevpress))
 	except:
 		print(traceback.format_exc())
@@ -81,7 +81,7 @@ if __name__=="__main__":
 	'''
 	BME280.bme280_setup()
 	BME280.bme280_calib_param()
-	TSL2561_setup()
+	TSL2561.tsl2561_setup()
 	while 1:
 		pressdetect(0.3)
 		time.sleep(1)
