@@ -27,8 +27,8 @@ def luxdetect(anylux):
 	luxreleasejudge = 0
 	try:
 		luxdata = TSL2561.readLux()
-		print(luxdata)
-		print(luxcount)
+		#print(luxdata)
+		#print(luxcount)
 		if luxdata[0] > anylux or luxdata[1] > anylux:
 			luxcount += 1
 			if luxcount > 4:
@@ -52,7 +52,7 @@ def pressdetect(anypress):
 		time.sleep(1)
 		pressdata = BME280.bme280_read()
 		latestpress = pressdata[1]
-		print(presscount)
+		#print(presscount)
 		deltP = latestpress - prevpress
 		if 0.0 in bme280data:
 			print("BME280rror!")
@@ -65,7 +65,7 @@ def pressdetect(anypress):
 				print("pressreleasejudge")
 		else:
 			Presscount = 0
-		print(str(latestpress) + "	:	" + str(prevpress))
+		#print(str(latestpress) + "	:	" + str(prevpress))
 	except:
 		print(traceback.format_exc())
 		presscount = 0
@@ -81,6 +81,7 @@ if __name__=="__main__":
 	'''
 	BME280.bme280_setup()
 	BME280.bme280_calib_param()
+	TSL2561_setup()
 	while 1:
 		pressdetect(0.3)
 		time.sleep(1)
