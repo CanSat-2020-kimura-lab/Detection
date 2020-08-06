@@ -26,33 +26,33 @@ def Pressdetect(anypress):
     global pressdata
     presslandjudge = 0
     try:
-        print(pressdata)
+        #print(pressdata)
         Prevpress = pressdata[1]
-        print("Prev=", Prevpress)
+        #print("Prev=", Prevpress)
         pressdata = BME280.bme280_read()
         Latestpress = pressdata[1]
-        print("Latest=", str(Latestpress))
+        #print("Latest=", str(Latestpress))
         deltP = abs(Latestpress - Prevpress)
-        print(str(Latestpress)+"    :    "+str(Prevpress))
+        #print(str(Latestpress)+"    :    "+str(Prevpress))
         if 0.0 in bme280data:
             print("BME280error!")
             presslandjudge = 2
             Pcount = 0
-            print(Pcount)
+            #print(Pcount)
         elif deltP < anypress:
             Pcount += 1
-            print(Pcount)
+            #print(Pcount)
             if Pcount > 4:
                 presslandjudge = 1
-                print("presslandjudge")
+                #print("presslandjudge")
         else:
             Pcount = 0
-            print(Pcount)
+            #print(Pcount)
     except:
         print(traceback.format_exc())
         Pcount = 0
         presslandjudge = 2
-        print(Pcount)
+        #print(Pcount)
     return Pcount, presslandjudge
 
 def gpsdetect(anyalt):
@@ -64,12 +64,12 @@ def gpsdetect(anyalt):
         Latestgpsalt = gpsdata[3]
         Prevgpsalt = gpsdata[3]
         daltGA = abs(Latestgpsalt - Prevgpsalt)
-        print(str(Latestgpsslt)+"   :   "+str(Prevgpsalt))
+        #print(str(Latestgpsslt)+"   :   "+str(Prevgpsalt))
         if daltGA < anyalt:
             GAcount += 1
             if GAcount > 4:
                 gpslandjudge = 1
-                print("gpslandjudge")
+                #print("gpslandjudge")
             else:
                 gpslandjudge = 0
     except:
