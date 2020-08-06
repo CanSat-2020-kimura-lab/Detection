@@ -29,6 +29,7 @@ def Pressdetect(anypress):
         #print(pressdata)
         Prevpress = pressdata[1]
         #print("Prev=", Prevpress)
+        time.sleep(1)
         pressdata = BME280.bme280_read()
         Latestpress = pressdata[1]
         #print("Latest=", str(Latestpress))
@@ -61,8 +62,10 @@ def gpsdetect(anyalt):
     gpslandjudge = 0
     try:
         gpsdata = GPS.readGPS()
-        Latestgpsalt = gpsdata[3]
         Prevgpsalt = gpsdata[3]
+        time.sleep(1)
+        gpsdata = GPS.readGPS()
+        Latestgpsalt = gpsdata[3]
         daltGA = abs(Latestgpsalt - Prevgpsalt)
         #print(str(Latestgpsslt)+"   :   "+str(Prevgpsalt))
         if daltGA < anyalt:
