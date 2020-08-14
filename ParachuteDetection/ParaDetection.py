@@ -71,7 +71,9 @@ if __name__ == "__main__":
 	#--- Parachute detection test ---#
 	try:
 		while 1:
-			f, a, n = ParaDetection("/home/pi/photo/photo",320,240,200,10,120)
+			flug = -1
+			while flug == -1
+				f, a, n = ParaDetection("/home/pi/photo/photo",320,240,200,10,120)
 			print("flug", f)
 			print("area", a)
 			print("name", n)
