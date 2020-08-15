@@ -134,9 +134,9 @@ class Run:
         def turn_right(self):
                 #-- right wheel is high speed left wheel is low speed --#
                 #high_speed()
-                d1 = 192
+                d1 = 64
                 #low_speed()
-                d2 = 64
+                d2 = 192
                 setup_mode(1,0,1)
                 pi.set_PWM_dutycycle(Ena1, d1)
                 pi.set_PWM_dutycycle(Pha1, d1)
@@ -149,8 +149,8 @@ class Run:
         
         def turn_right_l(self):
                 #-- right wheel is high speed left wheel is low speed --#
-                d1 = 128
-                d2 = 32
+                d1 = 32
+                d2 = 128
                 setup_mode(1,0,1)
                 pi.set_PWM_dutycycle(Ena1, d1)
                 pi.set_PWM_dutycycle(Pha1, d1)
@@ -159,8 +159,8 @@ class Run:
 
         def turn_left(self):
                 #-- right wheel is high speed left wheel is low speed --#
-                d1 = 64
-                d2 = 192
+                d1 = 192
+                d2 = 64
                 setup_mode(1,0,1)
                 pi.set_PWM_dutycycle(Ena1, d1)
                 pi.set_PWM_dutycycle(Pha1, d1)
@@ -172,8 +172,8 @@ class Run:
 
         def turn_left_l(self):
                 #-- right wheel is high speed left wheel is low speed --#
-                d1 = 32
-                d2 = 128
+                d1 = 128
+                d2 = 32
                 setup_mode(1,0,1)
                 pi.set_PWM_dutycycle(Ena1, d1)
                 pi.set_PWM_dutycycle(Pha1, d1)
